@@ -1,0 +1,55 @@
+services:
+
+  uryolog-rp:
+    image: steveltn/https-portal:1
+    container_name: uryolog-rp
+    hostname: uryolog-rp
+    restart: always
+    environment:
+      # STAGE: production
+      DOMAINS: blog.uryonym.com -> http://uryolog-wp:80
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - uryolog-wp
+    volumes:
+      - uryolog-rp-volume:/var/lib/https-portal
+
+  uryolog-wp:
+    image: wordpress:6.3.0-php8.2
+    container_name: uryolog-wp
+    hostname: uryolog-wp
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: uryolog-db
+      WORDPRESS_DB_USER: ${DB_USER}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      WORDPRESS_DB_NAME: ${DB_NAME}
+    ports:
+      - 80:80
+    volumes:
+      - ./html:/var/www/html
+    depends_on:
+      - uryolog-db
+  
+  uryolog-db:
+    image: mysql:8.1.0
+    container_name: uryolog-db
+    hostname: uryolog-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    volumes:
+      - uryolog-db-volume:/var/lib/mysql
+
+volumes:
+  uryolog-rp-volume:
+  uryolog-db-volume:
+
+networks:
+  default:
+    name: uryolog-network

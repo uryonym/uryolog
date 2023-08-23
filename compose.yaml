@@ -17,7 +17,7 @@ services:
       - uryolog-rp-volume:/var/lib/https-portal
 
   uryolog-wp:
-    image: wordpress:6.3.0-php8.2
+    image: wordpress:6.3.0
     container_name: uryolog-wp
     hostname: uryolog-wp
     restart: always
@@ -32,15 +32,15 @@ services:
       - uryolog-db
   
   uryolog-db:
-    image: mysql:8.1.0
+    image: mariadb:11.0.3
     container_name: uryolog-db
     hostname: uryolog-db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: ${DB_NAME}
     volumes:
       - uryolog-db-volume:/var/lib/mysql
 
